@@ -190,6 +190,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\Client1\Client1Exporter.cs" />
+    <Compile Include="Clients\Client2\Client2Exporter.cs" />
     <Compile Include="Clients\Client3\Client3BillingExporter.cs" />
     <Compile Include="Clients\Client3\Client3SettlementsExporter.cs" />
     <Compile Include="Core\Base\ClientExporterBase.cs" />
@@ -232,7 +233,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Clients\Client2\" />
     <Folder Include="UI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

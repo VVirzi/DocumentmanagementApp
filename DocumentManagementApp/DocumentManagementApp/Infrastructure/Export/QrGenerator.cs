@@ -16,11 +16,11 @@ namespace DocumentManagementApp.Infrastructure.Export
         private const int QrImageSize = 300;
 
         /// <summary>
-        /// Generares QR code image from the concatenated values of all columns in a DataRow.
+        /// Generates QR code image from the concatenated values of all columns in a DataRow.
         /// </summary>
         /// <param name="row">The DataRow whose values will be encoded.</param>
         /// <returns>PNG image as a byte array.</returns>
-        public bite[] GenerateFromDataRow(DataRow row)
+        public byte[] GenerateFromDataRow(DataRow row)
         {
             string content = BuildQrContent(row);
 
@@ -39,7 +39,7 @@ namespace DocumentManagementApp.Infrastructure.Export
             using (Bitmap bitmap = writer.Write(content))
             using (MemoryStream ms = new MemoryStream())
             {
-                bitmap.Save(stream, ImageFormat.Png);
+                bitmap.Save(ms, ImageFormat.Png);
                 return ms.ToArray();
             }
         }
@@ -47,7 +47,7 @@ namespace DocumentManagementApp.Infrastructure.Export
         private string BuildQrContent(DataRow row)
         {
             var builder = new StringBuilder();
-            foreach(DataRow item in row.ItemArray)
+            foreach(var item in row.ItemArray)
             {
                 builder.Append(item?.ToString());
             }

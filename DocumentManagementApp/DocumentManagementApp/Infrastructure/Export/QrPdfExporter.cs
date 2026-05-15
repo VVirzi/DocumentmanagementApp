@@ -7,11 +7,12 @@ using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
+using System.IO;
 
 namespace DocumentManagementApp.Infrastructure.Export
 {
     /// <summary>
-    /// Exxports a Datatable as a PDF file where each row is rendered as a QR code.
+    /// Exports a DataTable as a PDF file where each row is rendered as a QR code.
     /// </summary>
     public class QrPdfExporter
     {
@@ -41,8 +42,8 @@ namespace DocumentManagementApp.Infrastructure.Export
                 float marginInPoints = MmToPoints(MarginInMm);
                 document.SetMargins(marginInPoints, marginInPoints, marginInPoints, marginInPoints);
 
-                float uasbleWidth = MmToPoints(PageWidthInMm);
-                Table pdfTable = CreatePdfTable(uasbleWidth);
+                float usableWidth = MmToPoints(PageWidthInMm);
+                Table pdfTable = CreatePdfTable(usableWidth);
                 int counter = 0;
 
                 foreach (DataRow row in table.Rows)
@@ -51,18 +52,18 @@ namespace DocumentManagementApp.Infrastructure.Export
                     {
                         document.Add(pdfTable);
                         document.Add(new AreaBreak());
-                        pdfTable = CreatePdfTable(uasbleWidth);
+                        pdfTable = CreatePdfTable(usableWidth);
                     }
 
                     pdfTable.AddCell(BuildQrCell(row));
                     counter++;
                 }
 
-                document.Add(pdfTable)
+                document.Add(pdfTable);
             }
         }
 
-        private Table CreatePdfTable(float usableWith)
+        private Table CreatePdfTable(float usableWidth)
         {
             return new Table(UnitValue.CreatePointArray(
                 Enumerable.Repeat(usableWidth, 1).ToArray()

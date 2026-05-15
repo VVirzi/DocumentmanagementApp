@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Globalization;
 using DocumentManagementApp.Core.Base;
 
@@ -17,7 +18,7 @@ namespace DocumentManagementApp.Clients.Client3
             DataTable result = CreateResultTable();
             var invoiceProductMap = new Dictionary<string, DataRow>();
 
-            foreach (DataRow row in rawData)
+            foreach (DataRow row in rawData.Rows)
             {
                 string invoiceId = row[1]?.ToString();
                 if (string.IsNullOrEmpty(invoiceId)) continue;
@@ -110,7 +111,7 @@ namespace DocumentManagementApp.Clients.Client3
         private string NormalizePrice(string price)
         {
             if(string.IsNullOrEmpty(price)) return "0";
-            if(price.Lenght >=3 && price[price.Length - 3] == ',') 
+            if(price.Length >= 3 && price[price.Length - 3] == ',') 
                 return price.Replace(".", string.Empty).Replace(",", ".");
             return price.Replace(",", string.Empty);
         }

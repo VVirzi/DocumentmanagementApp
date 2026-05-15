@@ -8,16 +8,16 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 namespace DocumentManagementApp.Infrastructure.Import
 {
     /// <summary>
-    /// Imports and parses fixed-with ANMAT .txt files into DataTable.
+    /// Imports and parses fixed-width ANMAT .txt files into DataTable.
     /// </summary>
-    public static class AnmatTxtImporter
+    public class AnmatTxtImporter
     {
         private readonly string _companyFilter;
 
-        ///<summary>
-        ///Inittializes the importer whith a company name to filter records by.
-        ///</summary>
-        ///<param name="companyFilter"> The company name to match in the ANMAT file.</param>
+        /// <summary>
+        /// Initializes the importer with a company name to filter records by.
+        /// </summary>
+        /// <param name="companyFilter"> The company name to match in the ANMAT file.</param>
         public AnmatTxtImporter(string companyFilter)
         {
             if (string.IsNullOrWhiteSpace(companyFilter))
@@ -69,9 +69,9 @@ namespace DocumentManagementApp.Infrastructure.Import
         /// </summary>
         public string PickFilePath()
         {
-            using (var openFileDialog = new OpenFileDialog { Filter = "Text files|*.txt" })
+            using (var dialog = new OpenFileDialog { Filter = "Text files|*.txt" })
             {
-                return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : nul
+                return dialog.ShowDialog() == DialogResult.OK ? dialog.FileName : null;
             }
         }
 
@@ -80,9 +80,11 @@ namespace DocumentManagementApp.Infrastructure.Import
             var lines = new List<string>();
             using (var reader = new StreamReader(filePath))
             {
-                while (!reader.EndOfStream)
+                string line;
+                while ((line = reader.ReadLine()) != null)
                 {
-                    lines.Add(reader.ReadLine());
+                    if (!string.IsNullOrWhiteSpace(line))
+                        lines.Add(line);
                 }
             }
             return lines;

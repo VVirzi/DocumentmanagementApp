@@ -10,15 +10,15 @@ namespace DocumentManagementApp.Core.Base
     /// <summary>
     /// Provides base functionality shared across all client exporters.
     /// </summary>
-    public abstract class ClientExporterBase: IClientExporter
+    public abstract class ClientExporterBase : IClientExporter
     {
         private string _primaryPath;
         private string _secondaryPath;
         private string _tertiaryPath;
 
-        public string PrimaryPath => _primaryPath;
-        public string SecondaryPath => _secondaryPath;
-        public string TertiaryPath => _tertiaryPath;
+        protected string PrimaryPath => _primaryPath;
+        protected string SecondaryPath => _secondaryPath;
+        protected string TertiaryPath => _tertiaryPath;
 
         /// <inheritdoc/>
         public abstract DataTable GenerateFormattedTable(DataTable rawData);
@@ -50,11 +50,11 @@ namespace DocumentManagementApp.Core.Base
         ///<summary>
         /// Imported an HTML-based Excel file into a Datatable.
         /// </summary>
-        protected DataTable ImportFileIntoDataTable(string filePath)
+        protected DataTable ImportFileToDataTable(string filePath)
         {
             try
             {
-                return HTMLExcelImporter.Import(filePath);
+                return HtmlExcelImporter.Import(filePath);
             }
             catch (System.Exception ex)
             {
@@ -63,4 +63,5 @@ namespace DocumentManagementApp.Core.Base
                 return null;
             }
         }
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using DocumentManagementApp.Core.Base;
 
 namespace DocumentManagementApp.Clients.Client3
@@ -16,7 +17,7 @@ namespace DocumentManagementApp.Clients.Client3
             DataTable result = CreateResultTable();
             HashSet<string> processedInvoices = new HashSet<string>();
 
-            foreach (DataRow row in rawData)
+            foreach (DataRow row in rawData.Rows)
             {
                 string invoiceId = row[1]?.ToString();
 
@@ -55,7 +56,7 @@ namespace DocumentManagementApp.Clients.Client3
             newRow["TotalAmount"] = source[16]?.ToString()?.Replace(".", string.Empty);
 
             return newRow;
-        })
+        }
 
         private string ParseDate(string raw, string format)
         {

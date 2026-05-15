@@ -2,7 +2,6 @@
 using System.Data;
 using System.IO;
 using HtmlAgilityPack;
-using ZXing;
 
 namespace DocumentManagementApp.Infrastructure.Import
 {
@@ -22,34 +21,34 @@ namespace DocumentManagementApp.Infrastructure.Import
                 throw new FileNotFoundException("File not found.", filePath);
 
             string html;
-            using (var reader = new StreamReader(filePath, true)) {html = reader.ReadToEnd();}
+            using (var reader = new StreamReader(filePath, true)) { html = reader.ReadToEnd(); }
 
-            var doc = new HtmlDocument();   
+            var doc = new HtmlDocument();
             doc.LoadHtml(html);
 
             var htmlTable = doc.DocumentNode.SelectSingleNode("//table");
-            if(htmlTable == null)
-                throw new Exception("No table found in the HTML file.");)
+            if (htmlTable == null)
+                throw new Exception("No table found in the HTML file.");
 
             var rows = htmlTable.SelectNodes(".//tr");
-            if(rows == null || rows==0) 
+            if (rows == null || rows.Count < 1)
                 throw new Exception("No rows found in the table.");
 
             var result = new DataTable();
 
             //Process headers
             var headers = rows[0].SelectNodes("th|td");
-            foreach(var header in headers)
+            foreach (var header in headers)
             {
                 string columnName = header.InnerText.Trim();
-                if(string.IsNullOrEmpty(columnName))
-                    columnName = $"Column{dataTable.Columns.Count + 1}";
+                if (string.IsNullOrEmpty(columnName))
+                    columnName = $"Column{result.Columns.Count + 1}";
 
                 result.Columns.Add(columnName);
             }
 
             //Process data rows
-            for (int i = 0; i < rows.Count; i++)
+            for (int i = 1; i < rows.Count; i++)
             {
                 var cells = rows[i].SelectNodes("th|td");
                 if (cells == null) continue;
@@ -64,3 +63,4 @@ namespace DocumentManagementApp.Infrastructure.Import
             return result;
         }
     }
+}

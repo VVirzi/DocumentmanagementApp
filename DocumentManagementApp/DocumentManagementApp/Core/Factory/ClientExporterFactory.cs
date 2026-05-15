@@ -32,5 +32,6 @@ namespace DocumentManagementApp.Core.Factory
                 default:
                     throw new ArgumentException($"Unrecognized client name: {clientName}");
             }
+        }
     }
 }
