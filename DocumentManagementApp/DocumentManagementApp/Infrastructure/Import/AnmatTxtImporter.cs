@@ -41,23 +41,24 @@ namespace DocumentManagementApp.Infrastructure.Import
             var lines = ReadLines(filePath);
             var result = CreateResultTable();
 
-            foreach (var line in File.ReadLines(filePath))
+            foreach ( var line in lines )
             {
-                if (line.Length < 80) continue; // Skip malformed lines
-                string company = line.Substring(0, 20).Trim();
-                if (!company.Equals(_companyFilter, StringComparison.OrdinalIgnoreCase))
-                    continue; // Skip non-matching companies
-                string product = line.Substring(20, 30).Trim();
-                string registrationNumber = line.Substring(50, 20).Trim();
-                string expirationDateStr = line.Substring(70, 10).Trim();
-                DateTime expirationDate;
-                DateTime.TryParse(expirationDateStr, out expirationDate); // Try parsing date
-                var newRow = result.NewRow();
-                newRow["Company"] = company;
-                newRow["Product"] = product;
-                newRow["RegistrationNumber"] = registrationNumber;
-                newRow["ExpirationDate"] = expirationDate != DateTime.MinValue ? expirationDate.ToShortDateString() : "Invalid Date";
-                result.Rows.Add(newRow);
+                if (line.Length < 1374) continue;
+
+                string companyName = line.Substring(894,15).Trim();
+
+                if(companyName.Equals(_companyFilter, StringComparison.OrdinalIgnoreCase))
+                {
+                    DataRow row = result.NewRow();
+                    row["TransactionId"] = ExtractField(line, 0, 10);
+                    row["Gtin"] = ExtractField(line, 526, 15);
+                    row["SerialNumber"] = ExtractField(line, 810, 21);
+                    row["Batch"] = ExtractField(line, 831, 20);
+                    row["ExpiryDate"] = ExtractField(line, 851, 10);
+                    row["DeliveryNote"] = ExtractField(line, 1334, 13);
+
+                    result.Rows.Add(row);
+                }
             }
             return result;
         }
