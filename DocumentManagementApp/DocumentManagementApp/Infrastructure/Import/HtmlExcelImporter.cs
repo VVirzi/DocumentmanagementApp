@@ -21,7 +21,10 @@ namespace DocumentManagementApp.Infrastructure.Import
                 throw new FileNotFoundException("File not found.", filePath);
 
             string html;
-            using (var reader = new StreamReader(filePath, true)) { html = reader.ReadToEnd(); }
+            using (var reader = new StreamReader(filePath, true))
+            {
+                html = reader.ReadToEnd();
+            }
 
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
@@ -36,26 +39,31 @@ namespace DocumentManagementApp.Infrastructure.Import
 
             var result = new DataTable();
 
-            //Process headers
-            var headers = rows[0].SelectNodes("th|td");
-            foreach (var header in headers)
+            // Process headers
+            var headerCells = rows[0].SelectNodes("th|td");
+            if (headerCells == null)
+                throw new Exception("No header cells found.");
+
+            foreach (var header in headerCells)
             {
                 string columnName = header.InnerText.Trim();
-                if (string.IsNullOrEmpty(columnName))
+                if (string.IsNullOrWhiteSpace(columnName))
                     columnName = $"Column{result.Columns.Count + 1}";
-
                 result.Columns.Add(columnName);
             }
 
-            //Process data rows
+            // Process data rows
             for (int i = 1; i < rows.Count; i++)
             {
                 var cells = rows[i].SelectNodes("th|td");
-                if (cells == null) continue;
+                if (cells == null || cells.Count == 0) continue;
+
                 var newRow = result.NewRow();
-                for (int j = 0; j < cells.Count; j++)
+                for (int j = 0; j < result.Columns.Count; j++)
                 {
-                    newRow[j] = cells[j].InnerText.Trim();
+                    newRow[j] = j < cells.Count
+                        ? cells[j].InnerText.Trim()
+                        : string.Empty;
                 }
                 result.Rows.Add(newRow);
             }
