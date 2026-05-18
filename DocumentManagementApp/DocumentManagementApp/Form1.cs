@@ -114,11 +114,6 @@ namespace DocumentManagementApp
             {
                 ClearGrid(dataGridView_Client3);
                 DataTable rawData = ImportMainFile(textBox_File1_Client3.Text);
-
-                // DEBUG TEMPORAL
-                string cols = string.Join(", ", rawData.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
-                MessageBox.Show($"Columnas ({rawData.Columns.Count}):\n{cols}");
-
                 _currentExporter = ClientExporterFactory.GetClientExporter(exportType);
                 _currentExporter.SetSourceFiles(textBox_File1_Client3.Text, null, null);
                 _formattedTable = _currentExporter.GenerateFormattedTable(rawData);
